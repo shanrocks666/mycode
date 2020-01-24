@@ -1,0 +1,16 @@
+{
+  "CN": "system:node:k8s-250-node-01",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "Harrisburg",
+      "O": "system:nodes",
+      "OU": "Kubernetes The Alta3 Way",
+      "ST": "Pennsylvania"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-webby-combo-ghost
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-webby-combo-ghost
+  template:
+    metadata:
+      name: nginx-webby-combo-ghost
+      labels:
+        app: nginx-webby-combo-ghost
+    spec:
+      containers:
+      - name: webby
+        image: reg.alta3.com/888-sam-webby
+        ports:
+        - name: web
+          containerPort: 8888
+          protocol: TCP
+      - image: ghost
+        name: ghost
+        command:
+        - sh
+        - -c
+        - cp /ghost-config/ghost-config.js /var/lib/ghost/config.js
+          && docker-entrypoint.sh node current/index.js
+        volumeMounts:
+        - mountPath: /ghost-config
+          name: config
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        volumeMounts:
+        - name: nginx-proxy-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        - name: my-index-file
+          mountPath: /var/www/index.html
+          subPath: index.html
+        - name: static-demo-data
+          mountPath: /var/www/static/nginx.txt
+          subPath: nginx.txt
+        - name: top-secret-keys
+          mountPath: /etc/nginx/ssl
+          readOnly: true
+      volumes:
+      - name: nginx-proxy-config
+        configMap:
+          name: nginx-conf
+      - name: my-index-file
+        configMap:
+          name: index-file
+      - name: static-demo-data
+        configMap:
+          name: nginx-txt
+      - name: top-secret-keys
+        secret:
+          secretName: webby-keys
+      - name: config
+        configMap:
+          defaultMode: 420
+          name: ghost-config

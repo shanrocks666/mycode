@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: simpleservice
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: simpleservice
+        version: "1"
+    spec:
+      containers:
+        - name: simpleservice
+          image: "nginx"
+        - name: simpleservice-web
+          image: mhausenblas/simpleservice:0.5.0
+          ports:
+           - name: web
+             containerPort: 9876
+             protocol: TCP       

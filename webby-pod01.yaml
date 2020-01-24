@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webservice01
+  labels:
+    name: webservice01-web
+spec:
+  containers:
+  -
+    name: webservice01-web
+    image: reg.alta3.com/250-majumdar-webby
+    ports:
+     -
+       name: web
+       containerPort: 8888
+       protocol: TCP
